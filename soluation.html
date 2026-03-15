@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • 100% cover mobile menu (no search)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      color: #1e1e2f;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #0f1a2b;
+      border-bottom: 4px solid #2b6cff;
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: auto;
+      width: 140px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Desktop menu - hidden on mobile */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 0.3rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e6ecf5;
+      font-weight: 500;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .nav-link i {
+      color: #2b6cff;
+      font-size: 1rem;
+    }
+
+    .nav-link:hover {
+      background: rgba(43, 108, 255, 0.15);
+      border-color: #2b6cff;
+      color: white;
+    }
+
+    /* Dropdown desktop */
+    .nav-item {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #0f1a2b;
+      min-width: 220px;
+      border-radius: 20px;
+      padding: 0.6rem 0;
+      box-shadow: 0 25px 35px -12px #000000cc, 0 0 0 1px #2b6cff;
+      border: 1px solid #2b6cff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: 0.25s ease;
+      z-index: 100;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(6px);
+    }
+
+    .dropdown-content a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d3e0ff;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .dropdown-content a i {
+      width: 22px;
+      color: #2b6cff;
+    }
+
+    .dropdown-content a:hover {
+      background: #1a2f4a;
+      border-left-color: #2b6cff;
+      color: white;
+    }
+
+    /* Desktop right side - ONLY LOGIN (search removed) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid #2b6cff;
+      border-radius: 60px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+    }
+
+    .login-btn:hover {
+      background: #2b6cff;
+      color: white;
+      border-color: white;
+    }
+
+    /* Hamburger - perfect for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      background: #1f2b3f;
+      border-radius: 16px;
+      border: 2px solid #2b6cff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .hamburger:hover {
+      background: #2b6cff;
+    }
+    
+    .hamburger span {
+      width: 26px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* ===== 100% COVER MOBILE DRAWER (FULL SCREEN) ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 2999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;        /* 100% width */
+      height: 100vh;       /* 100% height */
+      background: #0a1322;
+      z-index: 3000;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      border-right: none;   /* no border, full coverage */
+      box-shadow: none;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #1f3a70;
+      padding-bottom: 1.2rem;
+    }
+
+    .drawer-logo img {
+      height: auto;
+      width: 150px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .close-drawer {
+      background: #1f3a70;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2b6cff;
+      transition: 0.2s;
+    }
+    
+    .close-drawer:hover {
+      background: #2b6cff;
+    }
+
+    .mobile-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .mobile-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: #eef4ff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .mobile-item i {
+      color: #2b6cff;
+      width: 28px;
+      font-size: 1.3rem;
+    }
+    
+    .mobile-item:hover {
+      background: #1f3a70;
+      transform: translateX(8px);
+    }
+
+    .mobile-dropdown {
+      margin-bottom: 0;
+    }
+    
+    .mobile-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      background: #1f3a70;
+    }
+    
+    .mobile-submenu {
+      display: none;
+      margin-left: 1.2rem;
+      margin-top: 10px;
+      padding-left: 1rem;
+      border-left: 4px solid #2b6cff;
+    }
+    
+    .mobile-submenu a {
+      display: block;
+      padding: 1rem 1.5rem;
+      background: #0e1a2a;
+      border-radius: 50px;
+      margin: 8px 0;
+      color: #b9d0ff;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      font-size: 1.1rem;
+    }
+    
+    .mobile-submenu a i {
+      margin-right: 12px;
+      color: #2b6cff;
+      width: 24px;
+    }
+    
+    .mobile-submenu a:hover {
+      background: #1f2f4a;
+      border-left-color: #2b6cff;
+    }
+    
+    .mobile-dropdown.open .mobile-submenu {
+      display: block;
+    }
+
+    /* Mobile login button - bigger for full screen */
+    .mobile-login {
+      background: #2b6cff;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+    
+    .mobile-login:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+    
+    .mobile-login i {
+      color: #0f1a2b;
+      font-size: 1.3rem;
+    }
+
+    /* RESPONSIVE: show hamburger on mobile */
+    @media screen and (max-width: 1024px) {
+      .nav-menu, .nav-actions {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .navbar {
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* Small phones adjustments */
+    @media screen and (max-width: 400px) {
+      .logo img {
+        width: 120px;
+      }
+      .hamburger {
+        width: 44px;
+        height: 44px;
+      }
+      .mobile-drawer {
+        padding: 1.5rem 1rem;
+      }
+      .mobile-item, .mobile-dropdown-toggle {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .close-drawer {
+        width: 48px;
+        height: 48px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Demo content */
+    .demo-content {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 40px;
+      border: 2px solid #2b6cff;
+      text-align: center;
+    }
+    .demo-content h1 {
+      color: #0f1a2b;
+      margin-bottom: 1rem;
+    }
+    .cover-note {
+      background: #2b6cff20;
+      padding: 1.2rem;
+      border-radius: 30px;
+      color: #0f1a2b;
+      margin-top: 2rem;
+      border: 2px dashed #2b6cff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR (DESKTOP + MOBILE HAMBURGER) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="stacklylogo (3).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- Desktop menu (hidden on mobile) -->
+      <ul class="nav-menu">
+        <li class="nav-item" id="desktopDropdown">
+          <a class="nav-link" id="desktopDropdownToggle">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" id="desktopDropdownMenu">
+            <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+            <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+          </div>
+        </li>
+        <li><a href="soluation.html" class="nav-link"><i class="fas fa-compass"></i> Solutions</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+        <li><a href="services.html" class="nav-link"><i class="fas fa-cogs"></i> Services</a></li>
+        <li><a href="about.html" class="nav-link"><i class="fas fa-users"></i> About</a></li>
+        <li><a href="blog.html" class="nav-link"><i class="fas fa-blog"></i> Blog</a></li>
+      </ul>
+
+      <!-- Desktop actions: ONLY LOGIN (search removed) -->
+      <div class="nav-actions">
+        <a href="login.html" class="login-btn"><i class="fas fa-user"></i> Login</a>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay (semi-transparent) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <!-- 100% COVER MOBILE DRAWER - FULL SCREEN -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="stacklylogo (3).webp" alt="logo">
+      </div>
+      <div class="close-drawer" id="closeDrawer"><i class="fas fa-times"></i></div>
+    </div>
+
+    <div class="mobile-menu">
+      <!-- Mobile dropdown for Home -->
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <div class="mobile-dropdown-toggle" id="mobileDropdownToggle">
+          <span><i class="fas fa-home"></i> Home</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="mobile-submenu">
+          <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+        </div>
+      </div>
+
+      <a href="soluation.html" class="mobile-item"><i class="fas fa-compass"></i> Solutions</a>
+      <a href="dashboard.html" class="mobile-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="services.html" class="mobile-item"><i class="fas fa-cogs"></i> Services</a>
+      <a href="about.html" class="mobile-item"><i class="fas fa-users"></i> About</a>
+      <a href="blog.html" class="mobile-item"><i class="fas fa-blog"></i> Blog</a>
+    </div>
+
+    <!-- Mobile login button (big and prominent) -->
+    <a href="login.html" class="mobile-login"><i class="fas fa-user"></i> Login</a>
+  </div>
+
+  
+
+  <script>
+    (function() {
+      // ===== DESKTOP DROPDOWN =====
+      const desktopToggle = document.getElementById('desktopDropdownToggle');
+      const desktopMenu = document.getElementById('desktopDropdownMenu');
+      const desktopItem = document.getElementById('desktopDropdown');
+
+      if (desktopToggle && desktopMenu) {
+        desktopToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+          const chevron = desktopToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = desktopMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!desktopItem.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+            const chevron = desktopToggle.querySelector('.fa-chevron-down');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      // ===== MOBILE DRAWER - FULL SCREEN =====
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('closeDrawer');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+      
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburger) hamburger.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // ===== MOBILE DROPDOWN TOGGLE =====
+      const mobileToggle = document.getElementById('mobileDropdownToggle');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      
+      if (mobileToggle && mobileDropdown) {
+        mobileToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileDropdown.classList.toggle('open');
+          const chevron = mobileToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = mobileDropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // No search functionality - verified
+      console.log('100% cover mobile menu ready');
+    })();
+  </script>
+</body>
+</html>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        /* Content */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            color: white;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
+        /* Main Text */
+        .hero-text {
+            margin-bottom: 40px;
+        }
+
+        .hero-text .line1 {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 span {
+            display: block;
+        }
+
+        .hero-text .line3 {
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #3b82f6;
+        }
+
+        .hero-text .line3 span {
+            display: block;
+        }
+
+        /* See how link */
+        .see-how {
+            margin-bottom: 60px;
+        }
+
+        .see-how a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .see-how a:hover {
+            gap: 15px;
+            border-bottom-color: white;
+        }
+
+        .see-how i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+
+        /* Follow us */
+        .follow-us {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .follow-us span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-text .line1 {
+                font-size: 40px;
+            }
+            .hero-text .line2 {
+                font-size: 55px;
+            }
+            .hero-text .line3 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 30px;
+            }
+            .hero-text .line1 {
+                font-size: 32px;
+            }
+            .hero-text .line2 {
+                font-size: 42px;
+            }
+            .hero-text .line3 {
+                font-size: 38px;
+            }
+            .see-how a {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 0 20px;
+            }
+            .hero-text .line1 {
+                font-size: 26px;
+            }
+            .hero-text .line2 {
+                font-size: 34px;
+            }
+            .hero-text .line3 {
+                font-size: 30px;
+            }
+            .see-how {
+                margin-bottom: 40px;
+            }
+            .follow-us {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <!-- Video Background -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="8345037-uhd_2160_3840_25fps (3).mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Dark Overlay -->
+        <div class="overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="line1">Stackly Payment Gateway –</div>
+                <div class="line2">
+                    <span>Solution</span>
+                </div>
+                <div class="line3">
+                    <span>powering digital transactions</span>
+                </div>
+            </div>
+
+            <div class="see-how">
+                <a href="404.html">Join Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="follow-us">
+                <span>Follow us</span>
+                <div class="social-icons">
+                    <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="404.html"><i class="fab fa-twitter"></i></a>
+                    <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+                    <a href="404.html"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • Payment Solutions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      color: #0f172a;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: all 0.8s ease;
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: all 0.8s ease;
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s ease;
+    }
+    .reveal.active, .reveal-left.active, .reveal-right.active, .reveal-scale.active {
+      opacity: 1;
+      transform: translate(0) scale(1);
+    }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .section-subtitle {
+      color: #2563eb;
+      font-weight: 600;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      margin-bottom: 15px;
+      color: #0f172a;
+    }
+    .section-description {
+      color: #475569;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .solutions-hero {
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    }
+    .solutions-hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .solutions-hero-badge {
+      background: #dbeafe;
+      color: #2563eb;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .solutions-hero-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .solutions-hero-title span {
+      color: #2563eb;
+    }
+    .solutions-hero-description {
+      color: #475569;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    .solutions-hero-stats {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .solutions-hero-stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2563eb;
+    }
+    .solutions-hero-stat-label {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+    .solutions-hero-image img {
+      border-radius: 30px;
+      box-shadow: 0 20px 30px -10px #94a3b8;
+    }
+
+    /* ===== TRUSTED SECTION ===== */
+    .trusted-section {
+      padding: 50px 20px;
+      background: #ffffff;
+      text-align: center;
+    }
+    .trusted-section h2 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 35px;
+    }
+    .trusted-section h2 b {
+      color: #2563eb;
+    }
+    .brand-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .brand-logos img {
+      height: 35px;
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+    .brand-logos img:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* ===== CARDS GRID (banks, institutions, etc) ===== */
+    .banks-section, .solutions-section {
+      padding: 60px 20px;
+      background: #f8fafc;
+    }
+    .banks-section:nth-child(even), .solutions-section:nth-child(even) {
+      background: #ffffff;
+    }
+
+    .banks-grid, .institutions-grid, .government-grid, .ecommerce-grid, .d2c-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .bank-card, .institution-card, .gov-card, .ecommerce-card, .d2c-card {
+      background: white;
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow: 0 5px 15px -5px #cbd5e1;
+      border: 2px solid #eef2f6;
+      transition: 0.3s;
+    }
+    .bank-card:hover, .institution-card:hover, .gov-card:hover, .ecommerce-card:hover, .d2c-card:hover {
+      transform: translateY(-8px);
+      border-color: #2563eb;
+      box-shadow: 0 15px 25px -8px #94a3b8;
+    }
+
+    .bank-logo {
+      width: 70px;
+      height: 70px;
+      background: #dbeafe;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .bank-logo i {
+      font-size: 2rem;
+      color: #2563eb;
+    }
+
+    .bank-card h3, .institution-card h3, .gov-card h3, .ecommerce-card h3, .d2c-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+    }
+    .bank-type, .institution-type, .gov-department, .ecommerce-category, .d2c-niche {
+      color: #2563eb;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .bank-stats, .gov-stats, .ecommerce-stats, .d2c-stats {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      padding: 10px 0;
+      border-top: 2px solid #eef2f6;
+      border-bottom: 2px solid #eef2f6;
+    }
+    .bank-stat, .gov-stat, .ecommerce-stat, .d2c-stat {
+      flex: 1;
+      text-align: center;
+    }
+    .bank-stat-value, .gov-stat-value, .ecommerce-stat-value, .d2c-stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2563eb;
+    }
+    .bank-stat-label, .gov-stat-label, .ecommerce-stat-label, .d2c-stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    .solution-btn {
+      display: inline-block;
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .solution-btn:hover {
+      background: #1e40af;
+      transform: translateY(-2px);
+    }
+
+    /* institution card specific */
+    .institution-image {
+      height: 160px;
+      overflow: hidden;
+      border-radius: 20px;
+      margin-bottom: 15px;
+    }
+    .institution-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s;
+    }
+    .institution-card:hover .institution-image img {
+      transform: scale(1.1);
+    }
+
+    /* government card */
+    .gov-image {
+      height: 180px;
+      overflow: hidden;
+      border-radius: 20px;
+      margin-bottom: 15px;
+    }
+    .gov-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ecommerce card */
+    .ecommerce-image {
+      height: 140px;
+      overflow: hidden;
+      border-radius: 20px;
+      margin-bottom: 15px;
+    }
+    .ecommerce-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ecommerce-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .ecommerce-rating {
+      color: #fbbf24;
+    }
+
+    /* d2c card */
+    .d2c-brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .d2c-logo {
+      width: 60px;
+      height: 60px;
+      background: #dbeafe;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .d2c-logo i {
+      font-size: 1.8rem;
+      color: #2563eb;
+    }
+    .growth-badge {
+      background: #10b981;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    /* ===== CASE STUDY ===== */
+    .case-study {
+      padding: 70px 20px;
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      color: white;
+    }
+    .case-study-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+    .case-study-content h2 {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      margin-bottom: 20px;
+    }
+    .case-study-content p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+    .case-study-stats {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    .case-stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .case-study-image img {
+      border-radius: 30px;
+      box-shadow: 0 20px 30px -10px #00000050;
+    }
+
+    /* ===== 404 MODAL ===== */
+    .error-404 {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .error-404.active {
+      display: flex;
+    }
+    .error-content {
+      background: white;
+      padding: 50px;
+      border-radius: 40px;
+      text-align: center;
+      max-width: 450px;
+      margin: 20px;
+    }
+    .error-icon {
+      font-size: 5rem;
+      color: #2563eb;
+      margin-bottom: 20px;
+    }
+    .error-title {
+      font-size: 4rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 15px;
+    }
+    .error-message {
+      color: #475569;
+      margin-bottom: 25px;
+    }
+    .error-btn {
+      padding: 14px 35px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1000px) {
+      .solutions-hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .solutions-hero-stats {
+        justify-content: center;
+      }
+      .banks-grid, .institutions-grid, .government-grid, .ecommerce-grid, .d2c-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .case-study-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .case-study-stats {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .banks-grid, .institutions-grid, .government-grid, .ecommerce-grid, .d2c-grid {
+        grid-template-columns: 1fr;
+        max-width: 450px;
+        margin: 30px auto 0;
+      }
+      .brand-logos {
+        gap: 25px;
+      }
+      .brand-logos img {
+        height: 28px;
+      }
+      .solutions-hero-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+      .case-study-stats {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .bank-stats, .gov-stats, .ecommerce-stats, .d2c-stats {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section-title {
+        font-size: 1.8rem;
+      }
+      .solutions-hero-title {
+        font-size: 2rem;
+      }
+      .bank-card, .institution-card, .gov-card, .ecommerce-card, .d2c-card {
+        padding: 20px;
+      }
+      .error-content {
+        padding: 30px 20px;
+      }
+      .error-title {
+        font-size: 3rem;
+      }
+    }
+
+    /* all buttons/links go to 404 */
+    a, button {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- HERO SECTION -->
+  <section class="solutions-hero">
+    <div class="container">
+      <div class="solutions-hero-content">
+        <div class="solutions-hero-text">
+          <div class="solutions-hero-badge reveal">🎯 Tailored Solutions</div>
+          <h1 class="solutions-hero-title reveal">Payment Solutions for <span>Every Industry</span></h1>
+          <p class="solutions-hero-description reveal">From banks to startups, governments to D2C brands - we have the perfect payment solution for your business.</p>
+          <div class="solutions-hero-stats reveal">
+            <div><span class="solutions-hero-stat-number">15+</span> <span class="solutions-hero-stat-label">Industries</span></div>
+            <div><span class="solutions-hero-stat-number">100K+</span> <span class="solutions-hero-stat-label">Clients</span></div>
+            <div><span class="solutions-hero-stat-number">190+</span> <span class="solutions-hero-stat-label">Countries</span></div>
+          </div>
+        </div>
+        <div class="solutions-hero-image reveal-right">
+          <img src="pav5.webp" alt="Solutions">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUSTED BRANDS -->
+  <section class="trusted-section">
+    <h2>Trusted payment platform for <b>2,50,000+ Indian brands</b></h2>
+    <div class="brand-logos">
+      <img src="cred.webp" alt="Cred">
+      <img src="zoomcar.webp" alt="Zoomcar">
+      <img src="porter.webp" alt="Porter">
+      <img src="fiter.webp" alt="Fittr">
+    </div>
+  </section>
+
+  <!-- BANKS SECTION -->
+  <section class="banks-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle reveal">Banks & Financial Institutions</span>
+        <h2 class="section-title reveal">Trusted by Leading Banks</h2>
+        <p class="section-description reveal">Powering payments for the world's largest financial institutions</p>
+      </div>
+      <div class="banks-grid">
+        <div class="bank-card reveal">
+          <div class="bank-logo"><i class="fas fa-university"></i></div>
+          <h3>Global Banking Corp</h3>
+          <div class="bank-type">Commercial Bank</div>
+          <div class="bank-stats">
+            <div class="bank-stat"><span class="bank-stat-value">5M+</span> <span class="bank-stat-label">Txns/day</span></div>
+            <div class="bank-stat"><span class="bank-stat-value">$2B+</span> <span class="bank-stat-label">Volume</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn">View Solution →</a>
+        </div>
+        <div class="bank-card reveal">
+          <div class="bank-logo"><i class="fas fa-piggy-bank"></i></div>
+          <h3>Regional Savings Bank</h3>
+          <div class="bank-type">Retail Banking</div>
+          <div class="bank-stats">
+            <div class="bank-stat"><span class="bank-stat-value">2M+</span> <span class="bank-stat-label">Customers</span></div>
+            <div class="bank-stat"><span class="bank-stat-value">500+</span> <span class="bank-stat-label">Branches</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn">View Solution →</a>
+        </div>
+        <div class="bank-card reveal">
+          <div class="bank-logo"><i class="fas fa-hand-holding-usd"></i></div>
+          <h3>Investment Trust</h3>
+          <div class="bank-type">Investment Banking</div>
+          <div class="bank-stats">
+            <div class="bank-stat"><span class="bank-stat-value">$50B+</span> <span class="bank-stat-label">AUM</span></div>
+            <div class="bank-stat"><span class="bank-stat-value">24/7</span> <span class="bank-stat-label">Processing</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn">View Solution →</a>
+        </div>
+      </div>
+
+      <!-- Institutions Grid -->
+      <div class="institutions-grid" style="margin-top:40px">
+        <div class="institution-card reveal">
+          <div class="institution-image"><img src="on.webp" alt="Credit Union"></div>
+          <h3>National Credit Union</h3>
+          <div class="institution-type">Credit Union</div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">Learn More</a>
+        </div>
+        <div class="institution-card reveal">
+          <div class="institution-image"><img src="digital26.webp" alt="Microfinance"></div>
+          <h3>Microfinance Foundation</h3>
+          <div class="institution-type">Microfinance</div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">Learn More</a>
+        </div>
+        <div class="institution-card reveal">
+          <div class="institution-image"><img src="on2.webp" alt="Asset Manager"></div>
+          <h3>Global Asset Management</h3>
+          <div class="institution-type">Asset Manager</div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOVERNMENT SECTION -->
+  <section class="solutions-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle reveal">Government & Public Sector</span>
+        <h2 class="section-title reveal">Modernizing Public Payments</h2>
+        <p class="section-description reveal">Secure, transparent payment solutions for government agencies</p>
+      </div>
+      <div class="government-grid">
+        <div class="gov-card reveal">
+          <div class="gov-image"><img src="digital18.webp" alt="Tax Department"></div>
+          <h3>National Tax Authority</h3>
+          <div class="gov-department">Tax Collection</div>
+          <div class="gov-stats">
+            <div class="gov-stat"><span class="gov-stat-value">$50B+</span> <span class="gov-stat-label">Collected</span></div>
+            <div class="gov-stat"><span class="gov-stat-value">99.9%</span> <span class="gov-stat-label">Success</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn">View Case Study</a>
+        </div>
+        <div class="gov-card reveal">
+          <div class="gov-image"><img src="digital19.webp" alt="Municipal Services"></div>
+          <h3>City Municipal Corporation</h3>
+          <div class="gov-department">Local Government</div>
+          <div class="gov-stats">
+            <div class="gov-stat"><span class="gov-stat-value">5M+</span> <span class="gov-stat-label">Citizens</span></div>
+            <div class="gov-stat"><span class="gov-stat-value">24/7</span> <span class="gov-stat-label">Services</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn">View Case Study</a>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- E-COMMERCE SECTION -->
+  <section class="solutions-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle reveal">E-commerce</span>
+        <h2 class="section-title reveal">Powering Online Stores Worldwide</h2>
+        <p class="section-description reveal">Complete payment solutions for businesses of all sizes</p>
+      </div>
+      <div class="ecommerce-grid">
+        <div class="ecommerce-card reveal">
+          <div class="ecommerce-image"><img src="digital21.webp" alt="Fashion"></div>
+          <div class="ecommerce-header">
+            <h3>StyleHub</h3>
+            <span class="ecommerce-rating">★★★★★</span>
+          </div>
+          <div class="ecommerce-category">Fashion Retailer</div>
+          <div class="ecommerce-stats">
+            <div class="ecommerce-stat"><span class="ecommerce-stat-value">500K+</span> <span class="ecommerce-stat-label">Orders/m</span></div>
+            <div class="ecommerce-stat"><span class="ecommerce-stat-value">$10M+</span> <span class="ecommerce-stat-label">GMV</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Solution</a>
+        </div>
+        <div class="ecommerce-card reveal">
+          <div class="ecommerce-image"><img src="digital22.webp" alt="Electronics"></div>
+          <div class="ecommerce-header">
+            <h3>GadgetWorld</h3>
+            <span class="ecommerce-rating">★★★★☆</span>
+          </div>
+          <div class="ecommerce-category">Electronics</div>
+          <div class="ecommerce-stats">
+            <div class="ecommerce-stat"><span class="ecommerce-stat-value">200K+</span> <span class="ecommerce-stat-label">Orders/m</span></div>
+            <div class="ecommerce-stat"><span class="ecommerce-stat-value">$25M+</span> <span class="ecommerce-stat-label">GMV</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Solution</a>
+        </div>
+        <div class="ecommerce-card reveal">
+          <div class="ecommerce-image"><img src="digital23.webp" alt="Grocery"></div>
+          <div class="ecommerce-header">
+            <h3>FreshMart</h3>
+            <span class="ecommerce-rating">★★★★★</span>
+          </div>
+          <div class="ecommerce-category">Grocery Delivery</div>
+          <div class="ecommerce-stats">
+            <div class="ecommerce-stat"><span class="ecommerce-stat-value">1M+</span> <span class="ecommerce-stat-label">Orders/m</span></div>
+            <div class="ecommerce-stat"><span class="ecommerce-stat-value">$15M+</span> <span class="ecommerce-stat-label">GMV</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Solution</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- D2C SECTION -->
+  <section class="solutions-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle reveal">D2C Brands</span>
+        <h2 class="section-title reveal">Empowering Direct-to-Consumer Revolution</h2>
+        <p class="section-description reveal">Helping brands connect directly with their customers</p>
+      </div>
+      <div class="d2c-grid">
+        <div class="d2c-card reveal">
+          <div class="d2c-brand">
+            <div class="d2c-logo"><i class="fas fa-leaf"></i></div>
+            <div><h3>PureOrganics</h3><div class="d2c-niche">Natural Skincare</div></div>
+          </div>
+          <span class="growth-badge">300% YoY Growth</span>
+          <div class="d2c-stats">
+            <div class="d2c-stat"><span class="d2c-stat-value">500K+</span> <span class="d2c-stat-label">Customers</span></div>
+            <div class="d2c-stat"><span class="d2c-stat-value">$20M+</span> <span class="d2c-stat-label">Revenue</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Story</a>
+        </div>
+        <div class="d2c-card reveal">
+          <div class="d2c-brand">
+            <div class="d2c-logo"><i class="fas fa-mug-hot"></i></div>
+            <div><h3>BrewCrew</h3><div class="d2c-niche">Artisan Coffee</div></div>
+          </div>
+          <span class="growth-badge">200% YoY Growth</span>
+          <div class="d2c-stats">
+            <div class="d2c-stat"><span class="d2c-stat-value">200K+</span> <span class="d2c-stat-label">Subscribers</span></div>
+            <div class="d2c-stat"><span class="d2c-stat-value">$10M+</span> <span class="d2c-stat-label">Revenue</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Story</a>
+        </div>
+        <div class="d2c-card reveal">
+          <div class="d2c-brand">
+            <div class="d2c-logo"><i class="fas fa-dumbbell"></i></div>
+            <div><h3>FitFuel</h3><div class="d2c-niche">Health Supplements</div></div>
+          </div>
+          <span class="growth-badge">400% YoY Growth</span>
+          <div class="d2c-stats">
+            <div class="d2c-stat"><span class="d2c-stat-value">1M+</span> <span class="d2c-stat-label">Customers</span></div>
+            <div class="d2c-stat"><span class="d2c-stat-value">$50M+</span> <span class="d2c-stat-label">Revenue</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Story</a>
+        </div>
+        <div class="d2c-card reveal">
+          <div class="d2c-brand">
+            <div class="d2c-logo"><i class="fas fa-child"></i></div>
+            <div><h3>TinyToes</h3><div class="d2c-niche">Baby Products</div></div>
+          </div>
+          <span class="growth-badge">250% YoY Growth</span>
+          <div class="d2c-stats">
+            <div class="d2c-stat"><span class="d2c-stat-value">300K+</span> <span class="d2c-stat-label">Moms</span></div>
+            <div class="d2c-stat"><span class="d2c-stat-value">$15M+</span> <span class="d2c-stat-label">Revenue</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Story</a>
+        </div>
+        <div class="d2c-card reveal">
+          <div class="d2c-brand">
+            <div class="d2c-logo"><i class="fas fa-paw"></i></div>
+            <div><h3>PetPals</h3><div class="d2c-niche">Pet Supplies</div></div>
+          </div>
+          <span class="growth-badge">350% YoY Growth</span>
+          <div class="d2c-stats">
+            <div class="d2c-stat"><span class="d2c-stat-value">400K+</span> <span class="d2c-stat-label">Pet Parents</span></div>
+            <div class="d2c-stat"><span class="d2c-stat-value">$25M+</span> <span class="d2c-stat-label">Revenue</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Story</a>
+        </div>
+        <div class="d2c-card reveal">
+          <div class="d2c-brand">
+            <div class="d2c-logo"><i class="fas fa-home"></i></div>
+            <div><h3>HomeHaven</h3><div class="d2c-niche">Home Decor</div></div>
+          </div>
+          <span class="growth-badge">150% YoY Growth</span>
+          <div class="d2c-stats">
+            <div class="d2c-stat"><span class="d2c-stat-value">150K+</span> <span class="d2c-stat-label">Homes</span></div>
+            <div class="d2c-stat"><span class="d2c-stat-value">$12M+</span> <span class="d2c-stat-label">Revenue</span></div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="margin-top:15px">View Story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDY -->
+  <section class="case-study">
+    <div class="container">
+      <div class="case-study-grid">
+        <div class="case-study-content">
+          <h2 class="reveal">How Global Bank Scaled Digital Payments</h2>
+          <p class="reveal">Leading multinational bank partnered with Stackly to process 5M+ daily transactions with 99.99% uptime.</p>
+          <div class="case-study-stats reveal">
+            <div class="case-stat"><span class="case-stat-value">40%</span> <br>Cost Reduction</div>
+            <div class="case-stat"><span class="case-stat-value">99.99%</span> <br>Uptime</div>
+            <div class="case-stat"><span class="case-stat-value">2x</span> <br>Speed</div>
+          </div>
+          <a href="404.html" onclick="show404()" class="solution-btn" style="background:white; color:#2563eb; max-width:250px; margin:0 auto 0 0">Read Case Study →</a>
+        </div>
+        <div class="case-study-image reveal-right">
+          <img src="upi.webp" alt="Case Study">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function reveal() {
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight - 100) {
+          el.classList.add('active');
+        }
+      });
+    }
+    window.addEventListener('scroll', reveal);
+    window.addEventListener('load', reveal);
+
+    function show404() {
+      document.getElementById('error404').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function hide404() {
+      document.getElementById('error404').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') hide404(); });
+    document.getElementById('error404')?.addEventListener('click', e => { if (e.target === e.currentTarget) hide404(); });
+  </script>
+</body>
+</html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ===== PREMIUM PAYMENT GATEWAY FOOTER ===== */
+    .footer {
+      background: #0f1a2b;  /* deep black-blue */
+      color: #e6ecf5;
+      border-top: 4px solid #2b6cff;
+      position: relative;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(0,0,0,0.3);
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #2b6cff, #ffffff, #2b6cff);
+      opacity: 0.5;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+    }
+
+    /* Footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #2b6cff;
+      border-radius: 2px;
+    }
+
+    /* Brand column with logo image */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo img {
+      height: auto;
+      width: 150px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* makes white logo - remove if logo is colored */
+    }
+
+    .footer-about {
+      color: #b0c6e0;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    /* Social media icons - 4 items */
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1f2f44;
+      color: #2b6cff;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+      background: #2b6cff;
+      color: white;
+      transform: translateY(-5px);
+      border-color: white;
+    }
+
+    /* Links columns */
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul li a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .footer-col ul li a i {
+      color: #2b6cff;
+      font-size: 0.8rem;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* Contact column */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #c9d9f0;
+    }
+
+    .contact-item i {
+      width: 24px;
+      color: #2b6cff;
+      font-size: 1.1rem;
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #1f2f44;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      border: 1px solid #2b6cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge i {
+      color: #2b6cff;
+    }
+
+    /* Newsletter - IMPROVED MOBILE VERSION */
+    .newsletter {
+      margin-top: 1.5rem;
+    }
+
+    .newsletter h4 {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .newsletter-box {
+      display: flex;
+      background: #1a2538;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 2px solid #2b6cff;
+      width: 100%;
+    }
+
+    .newsletter-box input {
+      flex: 1;
+      min-width: 0; /* prevents overflow on mobile */
+      padding: 0.9rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .newsletter-box input::placeholder {
+      color: #8a9fc0;
+    }
+
+    .newsletter-box button {
+      background: #2b6cff;
+      border: none;
+      padding: 0 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 2px solid white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+    }
+
+    .newsletter-box button i {
+      font-size: 0.9rem;
+    }
+
+    .newsletter-box button:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+      background: #0a1320;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f3a70;
+      color: #9bb0d0;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom .legal-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom .legal-links a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .legal-links a:hover {
+      color: #2b6cff;
+    }
+
+    .footer-bottom .payment-icons i {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #5f7d9e;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .payment-icons i:hover {
+      color: #2b6cff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 1.5rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .footer-bottom .legal-links {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .footer-bottom .payment-icons {
+        margin-top: 0.5rem;
+      }
+      
+      .footer-bottom .payment-icons i {
+        margin: 0 0.5rem;
+      }
+      
+      /* Improved mobile newsletter */
+      .newsletter-box {
+        flex-direction: column;
+        border-radius: 30px;
+      }
+      
+      .newsletter-box input {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 2px solid #2b6cff;
+      }
+      
+      .newsletter-box button {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid white;
+        justify-content: center;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 380px) {
+      .footer-social {
+        gap: 10px;
+      }
+      
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      
+      .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PREMIUM FOOTER - PAYMENT GATEWAY STYLE -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Column 1: Brand with logo image -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <!-- Logo image - replace src with your actual logo -->
+          <img src="stacklylogo (3).webp" alt="Stackly Pay" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span style="display:none; font-size:1.8rem; font-weight:700; color:white;">STACKLY<span style="color:#2b6cff;">pay</span></span>
+        </div>
+        <p class="footer-about">
+          Enterprise-grade payment gateway processing billions in transactions. Secure, scalable, and built for growth.
+        </p>
+        <!-- 4 SOCIAL MEDIA ICONS -->
+        <div class="footer-social">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+         
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+          <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Solutions (all links to 404) -->
+      <div class="footer-col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="soluation.html"><i class="fas fa-chevron-right"></i> Solution</a></li>
+          <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+          <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+          <li><a href="about.html"><i class="fas fa-chevron-right"></i> About</a></li>
+          <li><a href="blog.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Company (all links to 404) -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Press</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact & Newsletter with validation -->
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <div class="contact-item">
+          <i class="fas fa-map-pin"></i>
+          <span>100 Financial District, Bengaluru, India 571426</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>+91 9568759723</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>hello@stacklypay.com</span>
+        </div>
+
+        <!-- Payment badges -->
+        <div class="payment-badges">
+          <span class="badge"><i class="fab fa-cc-visa"></i> Visa</span>
+          <span class="badge"><i class="fab fa-cc-mastercard"></i> MC</span>
+          <span class="badge"><i class="fab fa-cc-amex"></i> Amex</span>
+        </div>
+
+        <!-- Newsletter with email validation -->
+        <div class="newsletter">
+          <h4>Stay updated</h4>
+          <div class="newsletter-box">
+            <input type="email" placeholder="your@email.com" id="newsletterEmail">
+            <button id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+          </div>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom (all links to 404) -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 Stackly Pay. All rights reserved.
+      </div>
+      <div class="legal-links">
+        <a href="404.html">Privacy Policy</a>
+        <a href="404.html">Terms of Service</a>
+        <a href="404.html">Cookie Policy</a>
+        <a href="404.html">GDPR</a>
+      </div>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-cc-stripe"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Email validation and redirect to 404
+      const emailInput = document.getElementById('newsletterEmail');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const emailError = document.getElementById('emailError');
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function handleSubscribe() {
+        const email = emailInput.value.trim();
+        
+        if (email === '' || !validateEmail(email)) {
+          emailError.classList.add('show');
+        } else {
+          emailError.classList.remove('show');
+          // Redirect to 404 page
+          window.location.href = '404.html';
+        }
+      }
+
+      if (subscribeBtn && emailInput) {
+        subscribeBtn.addEventListener('click', handleSubscribe);
+        
+        emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            handleSubscribe();
+          }
+        });
+
+        // Clear error when user starts typing
+        emailInput.addEventListener('input', () => {
+          emailError.classList.remove('show');
+        });
+      }
+
+      // All footer links already point to 404.html
+    })();
+  </script>
+</body>
+</html>
